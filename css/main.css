@@ -3528,4 +3528,33 @@ html.no-csstransitions .hero-content {
   }
 }
 
+/* ===================================================================
+ * # christmas
+ *
+ * ------------------------------------------------------------------- */
+.s-christmas {
+  padding-top: 12rem;
+  padding-bottom: 12rem;
+  background-color: #050505;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.s-christmas h3 {
+  color: #fb8b23;
+  margin-top: 0;
+}
+
+.s-christmas h2 {
+  color: #ffffff;
+  margin-top: 0;
+}
+
+.s-christmas .lead {
+  color: #ffffff;
+}
+
+.s-christmas img {
+  border-radius: 4px;
+}
+
 /*# sourceMappingURL=main.css.map */
