@@ -37,7 +37,7 @@ try {
     # Step 2: Get CloudFront Distribution ID
     Write-Host "[2/3] Getting CloudFront Distribution ID..." -ForegroundColor Yellow
     
-    $distributionId = aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items && contains(Aliases.Items, '$BucketName')].Id" --output text
+    $distributionId = aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items && contains(Aliases.Items, '`$BucketName')].Id" --output text
     
     if ([string]::IsNullOrWhiteSpace($distributionId)) {
         Write-Host "Warning: Could not find CloudFront distribution for $BucketName" -ForegroundColor Yellow
