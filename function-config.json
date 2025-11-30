@@ -1,0 +1,4 @@
+{
+    "Comment": "Redirect www to apex domain",
+    "Runtime": "cloudfront-js-1.0"
+}
