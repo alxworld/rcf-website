@@ -2,14 +2,16 @@
   "CallerReference": "www-redirect-2024",
   "Aliases": {
     "Quantity": 1,
-    "Items": ["www.mybibleworld.xyz"]
+    "Items": [
+      "www.rcfconnect.in"
+    ]
   },
   "Origins": {
     "Quantity": 1,
     "Items": [
       {
         "Id": "redirect-origin",
-        "DomainName": "mybibleworld.xyz",
+        "DomainName": "rcfconnect.in",
         "CustomOriginConfig": {
           "HTTPPort": 80,
           "HTTPSPort": 443,
@@ -24,7 +26,9 @@
     "MinTTL": 0,
     "ForwardedValues": {
       "QueryString": false,
-      "Cookies": {"Forward": "none"}
+      "Cookies": {
+        "Forward": "none"
+      }
     },
     "FunctionAssociations": {
       "Quantity": 1,
