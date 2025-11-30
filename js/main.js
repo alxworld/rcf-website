@@ -3,7 +3,7 @@
  *
  * ------------------------------------------------------------------- */
 
-;(function ($) {
+; (function ($) {
   'use strict'
 
   const cfg = {
@@ -137,14 +137,73 @@
     }
   }
 
-  /* Initialize
-   * ------------------------------------------------------ */
-  ;(function ssInit() {
-    ssPreloader()
-    ssMobileMenu()
-    ssAlertBoxes()
-    ssSmoothScroll()
-    ssBackToTop()
-    ssSetYear()
-  })()
+    /* Initialize
+     * ------------------------------------------------------ */
+    ; (function ssInit() {
+      ssPreloader()
+      ssMobileMenu()
+      ssAlertBoxes()
+      ssSmoothScroll()
+      ssBackToTop()
+      ssSetYear()
+      ssContactForm()
+    })()
 })(jQuery)
+
+/* Contact Form
+ * ------------------------------------------------------ */
+const ssContactForm = function () {
+  const form = document.getElementById('contactForm')
+  const submitBtn = document.getElementById('submit')
+
+  if (!form) return
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault()
+
+    // Disable submit button
+    submitBtn.disabled = true
+
+    // Get form data
+    const formData = {
+      cName: document.getElementById('cName').value,
+      cEmail: document.getElementById('cEmail').value,
+      cMessage: document.getElementById('cMessage').value,
+    }
+
+    // API Gateway URL - REPLACE THIS WITH YOUR ACTUAL URL
+    const apiURL = 'YOUR_API_GATEWAY_URL_HERE'
+
+    if (apiURL === 'YOUR_API_GATEWAY_URL_HERE') {
+      alert('Please configure the API Gateway URL in js/main.js')
+      submitBtn.disabled = false
+      return
+    }
+
+    try {
+      const response = await fetch(apiURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      // Show success message
+      alert('Message sent successfully!')
+      form.reset()
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Something went wrong. Please try again.')
+    } finally {
+      // Re-enable button regardless of success or failure
+      submitBtn.disabled = false
+    }
+  })
+}
