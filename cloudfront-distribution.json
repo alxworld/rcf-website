@@ -92,7 +92,7 @@
     "Comment": "CloudFront distribution for rcfconnect.in",
     "Enabled": true,
     "ViewerCertificate": {
-        "ACMCertificateArn": "arn:aws:acm:us-east-1:886008456570:certificate/b2335a3e-855e-44a0-b341-c1241598df24",
+        "ACMCertificateArn": "arn:aws:acm:us-east-1:745664232581:certificate/550b350f-35e5-4d8f-a0e5-6238ec90ff52",
         "SSLSupportMethod": "sni-only",
         "MinimumProtocolVersion": "TLSv1.2_2021"
     },
