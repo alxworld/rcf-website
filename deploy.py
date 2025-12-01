@@ -2,6 +2,9 @@ import subprocess
 import sys
 import os
 
+import json
+import time
+
 # --- Configuration ---
 BUCKET_NAME = "rcfconnect.in"
 DISTRIBUTION_ID = "E2AZR6PTEF5JFA"
@@ -39,6 +42,19 @@ def run_command(command):
         print("Error: 'aws' command not found. Please ensure AWS CLI is installed and in your PATH.")
         return False
 
+def get_command_output(command):
+    """Runs a command and returns its stdout as a string."""
+    try:
+        # print(f"Running (capturing output): {' '.join(command)}")
+        is_windows = sys.platform.startswith('win')
+        # using check=True to raise exception on failure
+        result = subprocess.run(command, shell=is_windows, capture_output=True, text=True, check=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing command: {e}")
+        print(f"Stderr: {e.stderr}")
+        return None
+
 def deploy():
     print(f"Starting deployment to {BUCKET_NAME}...")
 
@@ -65,14 +81,53 @@ def deploy():
         "--distribution-id", DISTRIBUTION_ID,
         "--paths", "/*",
         "--profile", AWS_PROFILE,
+        "--output", "json",
         "--no-cli-pager"
     ]
     
-    if not run_command(invalidate_cmd):
+    output = get_command_output(invalidate_cmd)
+    if not output:
         print("❌ CloudFront invalidation failed.")
         sys.exit(1)
+    
+    print(output)
+    
+    try:
+        invalidation_data = json.loads(output)
+        invalidation_id = invalidation_data['Invalidation']['Id']
+        print(f"Invalidation ID: {invalidation_id}")
+    except (json.JSONDecodeError, KeyError) as e:
+        print(f"❌ Failed to parse invalidation ID: {e}")
+        sys.exit(1)
+
+    # 3. Poll for completion
+    print("\n--- Step 3: Waiting for Invalidation to Complete ---")
+    while True:
+        check_cmd = [
+            "aws", "cloudfront", "get-invalidation",
+            "--distribution-id", DISTRIBUTION_ID,
+            "--id", invalidation_id,
+            "--profile", AWS_PROFILE,
+            "--output", "json",
+            "--no-cli-pager"
+        ]
         
-    print("\n✅ Deployment Complete! Your changes are live (invalidation may take a few minutes to propagate).")
+        output = get_command_output(check_cmd)
+        if output:
+            try:
+                status_data = json.loads(output)
+                status = status_data['Invalidation']['Status']
+                print(f"Status: {status}")
+                
+                if status == 'Completed':
+                    break
+            except (json.JSONDecodeError, KeyError):
+                print("Warning: Could not parse status, retrying...")
+        
+        print("Waiting 15 seconds...")
+        time.sleep(15)
+        
+    print("\n✅ Deployment Complete! Your changes are live.")
 
 if __name__ == "__main__":
     deploy()
